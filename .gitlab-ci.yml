@@ -22,14 +22,20 @@ build_image:
 
         ORG='pgbouncer'
         REPO='pgbouncer'
+        VERSION="$(
+            curl -sLI https://github.com/pgbouncer/pgbouncer/releases/latest | \
+                awk -F '/' \
+                '/^Location/ {
+                    sub("\r$", "");
+                    split($NF, v, "_");
+                    print v[2] "."  v[3] "." v[4]}
+                '
+        )"
 
-        docker build -t "${ORG}/${REPO}:latest" .
-
-        docker run --name delete_me -d ${ORG}/${REPO}:latest
-        docker cp "delete_me:/version.out" .
-        docker rm delete_me --force
-
-        VERSION="$(cat version.out)"
+        docker build \
+            -t "${ORG}/${REPO}:latest" \
+            --build-arg PGBOUNCER_VERSION="$VERSION" \
+            .
 
         docker pull "${ORG}/${REPO}:$VERSION" || {
             docker tag "${ORG}/${REPO}:latest" "${ORG}/${REPO}:$VERSION"
