@@ -9,6 +9,7 @@ services:
 before_script:
   - 'echo "Start time: $(date)"'
   - docker version
+  - apk add curl
 
 stages:
   - build_image
