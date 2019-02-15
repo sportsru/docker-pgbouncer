@@ -57,3 +57,4 @@ build_image:
     changes:
     - Dockerfile
     - entrypoint.sh
+    - .gitlab-ci.yml
