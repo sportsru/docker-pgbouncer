@@ -1,29 +1,28 @@
-FROM alpine
+FROM alpine:3.9
 
-FROM alpine:latest AS build_stage
+FROM alpine:3.9 AS build_stage
 
-MAINTAINER "robert@aztek.io"
+LABEL maintainer "robert@aztek.io"
 
-RUN apk --update add \
-        autoconf \
-        autoconf-doc \
-        automake \
-        c-ares \
-        c-ares-dev \
-        curl \
-        gcc \
-        libc-dev \
-        libevent \
-        libevent-dev \
-        libtool \
-        make \
-        man \
-        libressl-dev \
-        pkgconfig
+RUN apk --update --no-cache add \
+        autoconf=2.69-r2 \
+        autoconf-doc=2.69-r2 \
+        automake=1.16.1-r0 \
+        c-ares=1.15.0-r0 \
+        c-ares-dev=1.15.0-r0 \
+        curl=7.63.0-r0 \
+        gcc=8.2.0-r2 \
+        libc-dev=0.7.1-r0 \
+        libevent=2.1.8-r6 \
+        libevent-dev=2.1.8-r6 \
+        libtool=2.4.6-r5 \
+        make=4.2.1-r2 \
+        libressl-dev=2.7.4-r2 \
+        pkgconf=1.6.0-r0
 
 ARG PGBOUNCER_VERSION
 
-RUN curl -o  "/tmp/pgbouncer.tar.gz" -L "https://pgbouncer.github.io/downloads/files/${PGBOUNCER_VERSION}/pgbouncer-${PGBOUNCER_VERSION}.tar.gz"
+RUN curl -Lo  "/tmp/pgbouncer.tar.gz" "https://pgbouncer.github.io/downloads/files/${PGBOUNCER_VERSION}/pgbouncer-${PGBOUNCER_VERSION}.tar.gz"
 
 WORKDIR /tmp
 
@@ -35,14 +34,18 @@ WORKDIR /tmp/pgbouncer
 RUN ./configure --prefix=/usr && \
         make
 
-FROM alpine:latest
-RUN apk --update add libevent openssl c-ares
-WORKDIR /
-COPY --from=build_stage /tmp/pgbouncer /pgbouncer
+FROM alpine:3.9
+RUN apk --update --no-cache add \
+        libevent=2.1.8-r6 \
+        openssl=1.1.1a-r1 \
+        c-ares=1.15.0-r0
 
-EXPOSE 5432
+WORKDIR /
 USER postgres
 
-ADD ["entrypoint.sh", "/"]
+EXPOSE 5432
+COPY --from=build_stage --chown=postgres ["/tmp/pgbouncer", "/bin"]
+
+COPY --chown=postgres ["entrypoint.sh", "/"]
 ENTRYPOINT ["/entrypoint.sh"]
 
