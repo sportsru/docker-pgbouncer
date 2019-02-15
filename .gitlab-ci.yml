@@ -46,7 +46,7 @@ build_image:
                 docker push "${ORG}/${REPO}:$tag"
             done < /tmp/docker_image_version
         }
-  when:
+  only:
     changes:
     - Dockerfile
     - entrypoint.sh
