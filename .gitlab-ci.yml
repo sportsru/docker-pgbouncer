@@ -1,0 +1,52 @@
+image: docker:stable
+variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+
+services:
+  - docker:dind
+
+before_script:
+  - 'echo "Start time: $(date)"'
+  - docker version
+
+stages:
+  - build_image
+
+build_image:
+  stage: build_image
+  script:
+    - |
+        #!/bin/sh
+        set +x
+
+        ORG='pgbouncer'
+        REPO='pgbouncer'
+
+        docker build -t "${ORG}/${REPO}:latest" .
+
+        docker run --name delete_me -d ${ORG}/${REPO}:latest
+        docker cp "delete_me:/version.out" .
+        docker rm delete_me --force
+
+        VERSION="$(cat version.out)"
+
+        docker pull "${ORG}/${REPO}:$VERSION" || {
+            docker tag "${ORG}/${REPO}:latest" "${ORG}/${REPO}:$VERSION"
+
+            docker login \
+                --username "$DOCKER_ID_USER" \
+                --password "$DOCKER_PASSWORD"
+
+            docker images \
+                --filter reference="${ORG}/${REPO}" \
+                --format "{{.Tag}}"  > /tmp/docker_image_version
+
+            while read tag; do
+                docker push "${ORG}/${REPO}:$tag"
+            done < /tmp/docker_image_version
+        }
+  when:
+    changes:
+    - Dockerfile
+    - entrypoint.sh
