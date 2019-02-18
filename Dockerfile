@@ -35,17 +35,24 @@ RUN ./configure --prefix=/usr && \
         make
 
 FROM alpine:3.9
+
 RUN apk --update --no-cache add \
         libevent=2.1.8-r6 \
-        openssl=1.1.1a-r1 \
+        libressl=2.7.4-r2 \
         c-ares=1.15.0-r0
 
-WORKDIR /
+WORKDIR /etc/pgbouncer
+WORKDIR /var/log/pgbouncer
+
+RUN chown -R postgres:root \
+        /etc/pgbouncer \
+        /var/log/pgbouncer
+
 USER postgres
 
-EXPOSE 5432
-COPY --from=build_stage --chown=postgres ["/tmp/pgbouncer", "/bin"]
+COPY --from=build_stage --chown=postgres ["/tmp/pgbouncer", "/opt/pgbouncer"]
+COPY --chown=postgres ["entrypoint.sh", "/opt/pgbouncer"]
 
-COPY --chown=postgres ["entrypoint.sh", "/"]
-ENTRYPOINT ["/entrypoint.sh"]
+WORKDIR /opt/pgbouncer
+ENTRYPOINT ["/opt/pgbouncer/entrypoint.sh"]
 
