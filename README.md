@@ -9,6 +9,7 @@ docker run -d \
     -p 5439:5439 \
     --name=pgbouncer \
     -e "DATABASES_HOST=redshift.server.name" \
+    -e "DATABASES_PORT=5439" \
     -e "DATABASES_USER=awsuser" \
     -e "DATABASES_PASSWORD=secret" \
     -e "DATABASES_DBNAME=mydatabase" \
