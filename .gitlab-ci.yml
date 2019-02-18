@@ -1,18 +1,53 @@
-image: docker:stable
-variables:
-    DOCKER_HOST: tcp://docker:2375/
-    DOCKER_DRIVER: overlay2
-
-services:
-  - docker:dind
-
 before_script:
-  - 'echo "Start time: $(date)"'
-  - docker version
-  - apk add curl
+  - 'echo "Stage start time: $(date)"'
 
 stages:
+  - lint
+  - get_info
   - build_image
+
+lint_Dockerfile:
+  stage: lint
+  script:
+    - hadolint Dockerfile
+  image: hadolint/hadolint:latest-debian
+  only:
+    changes:
+    - Dockerfile
+    - .gitlab-ci.yml
+
+lint_entrypoint:
+  stage: lint
+  script:
+    - shellcheck entrypoint.sh
+  image: koalaman/shellcheck-alpine
+  only:
+    changes:
+    - entrypoint.sh
+    - .gitlab-ci.yml
+
+get_currentversion:
+  stage: get_info
+  script:
+    - |
+        apk add curl
+        curl -sLI https://github.com/pgbouncer/pgbouncer/releases/latest | \
+            awk -F '/' \
+                '/^Location/ {
+                    sub("\r$", "");
+                    split($NF, v, "_");
+                    print v[2] "."  v[3] "." v[4]}
+                ' > version.out
+  image: alpine
+  artifacts:
+    paths:
+    - version.out
+    expire_in: 12 hours
+  only:
+    changes:
+    - Dockerfile
+    - entrypoint.sh
+    - .gitlab-ci.yml
 
 build_image:
   stage: build_image
@@ -23,15 +58,9 @@ build_image:
 
         ORG='pgbouncer'
         REPO='pgbouncer'
-        VERSION="$(
-            curl -sLI https://github.com/pgbouncer/pgbouncer/releases/latest | \
-                awk -F '/' \
-                '/^Location/ {
-                    sub("\r$", "");
-                    split($NF, v, "_");
-                    print v[2] "."  v[3] "." v[4]}
-                '
-        )"
+        VERSION="$(cat version.out)"
+
+        docker --version
 
         docker build \
             -t "${ORG}/${REPO}:latest" \
@@ -53,6 +82,12 @@ build_image:
                 docker push "${ORG}/${REPO}:$tag"
             done < /tmp/docker_image_version
         }
+  image: docker:stable
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+  services:
+  - docker:dind
   only:
     changes:
     - Dockerfile
