@@ -12,7 +12,7 @@ invoke_main(){
 
 check_variables(){
     test -n "$DATABASES_HOST" ||
-        error "You have to set the DB_HOST Environment variable at the very least"
+        error "You have to set the DATABASES_HOST Environment variable at the very least"
 }
 
 error(){
