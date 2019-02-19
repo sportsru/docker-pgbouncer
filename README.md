@@ -47,7 +47,7 @@ As of right now only one DB Connection string per container is accepted.
 
 ## BUILD INFO
 
-This is an automated build that will kick off at midnight (CDT).
+This is an automated weekly build that will kick off at midnight on Sunday (CDT).
 
 This was created since pgbouncer does not have an official docker image.
 
