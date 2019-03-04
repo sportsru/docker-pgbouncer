@@ -10,14 +10,14 @@ RUN apk --update --no-cache add \
         automake=1.16.1-r0 \
         c-ares=1.15.0-r0 \
         c-ares-dev=1.15.0-r0 \
-        curl=7.63.0-r0 \
+        curl=7.64.0-r1 \
         gcc=8.2.0-r2 \
         libc-dev=0.7.1-r0 \
         libevent=2.1.8-r6 \
         libevent-dev=2.1.8-r6 \
         libtool=2.4.6-r5 \
         make=4.2.1-r2 \
-        libressl-dev=2.7.4-r2 \
+        libressl-dev=2.7.5-r0 \
         pkgconf=1.6.0-r0
 
 ARG PGBOUNCER_VERSION
@@ -38,7 +38,7 @@ FROM alpine:3.9
 
 RUN apk --update --no-cache add \
         libevent=2.1.8-r6 \
-        libressl=2.7.4-r2 \
+        libressl=2.7.5-r0 \
         c-ares=1.15.0-r0
 
 WORKDIR /etc/pgbouncer
