@@ -33,7 +33,7 @@ create_config(){
 #pgbouncer.ini
 
 [databases]
-* = host = ${DATABASES_HOST:?"You must set DATABASES_HOST env"} \
+* = host = ${DATABASES_HOST} \
 port=${DATABASES_PORT:-5432} user=${DATABASES_USER:-postgres}\
 ${DATABASES_PASSWORD:+" password=${DATABASES_PASSWORD}"}\
 ${DATABASES_DBNAME:+" dbname=${DATABASES_DBNAME}"}
