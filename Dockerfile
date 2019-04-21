@@ -11,18 +11,20 @@ RUN apk --update --no-cache add \
         c-ares=1.15.0-r0 \
         c-ares-dev=1.15.0-r0 \
         curl=7.64.0-r1 \
-        gcc=8.2.0-r2 \
+        gcc=8.3.0-r0 \
         libc-dev=0.7.1-r0 \
         libevent=2.1.8-r6 \
         libevent-dev=2.1.8-r6 \
         libtool=2.4.6-r5 \
         make=4.2.1-r2 \
         libressl-dev=2.7.5-r0 \
+        file=5.35-r0 \
         pkgconf=1.6.0-r0
 
 ARG PGBOUNCER_VERSION
 
-RUN curl -Lo  "/tmp/pgbouncer.tar.gz" "https://pgbouncer.github.io/downloads/files/${PGBOUNCER_VERSION}/pgbouncer-${PGBOUNCER_VERSION}.tar.gz"
+RUN curl -Lso  "/tmp/pgbouncer.tar.gz" "https://pgbouncer.github.io/downloads/files/${PGBOUNCER_VERSION}/pgbouncer-${PGBOUNCER_VERSION}.tar.gz" && \
+        file "/tmp/pgbouncer.tar.gz"
 
 WORKDIR /tmp
 
