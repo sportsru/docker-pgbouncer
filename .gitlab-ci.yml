@@ -75,7 +75,7 @@ build_image:
             docker tag "${ORG}/${REPO}:latest" "${ORG}/${REPO}:$VERSION"
         }
 
-        push_image {
+        push_image() {
             docker login \
                 --username "$DOCKER_ID_USER" \
                 --password "$DOCKER_PASSWORD"
