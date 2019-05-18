@@ -61,9 +61,9 @@ build_image:
         invoke_main(){
             build_image
 
-            # if ! docker pull "${ORG}/${REPO}:$VERSION"; then
+            if ! docker pull "${ORG}/${REPO}:$VERSION"; then
                 push_image
-            # fi
+            fi
         }
 
         build_image(){
