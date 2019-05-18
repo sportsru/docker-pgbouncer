@@ -18,7 +18,7 @@ RUN apk --update --no-cache add \
         libtool=2.4.6-r5 \
         make=4.2.1-r2 \
         libressl-dev=2.7.5-r0 \
-        file=5.35-r0 \
+        file=5.36-r0 \
         pkgconf=1.6.0-r0
 
 ARG PGBOUNCER_VERSION
