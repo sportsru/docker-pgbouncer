@@ -10,7 +10,7 @@ RUN apk --update --no-cache add \
         automake=1.16.1-r0 \
         c-ares=1.15.0-r0 \
         c-ares-dev=1.15.0-r0 \
-        curl=7.64.0-r1 \
+        curl=7.64.0-r2 \
         gcc=8.3.0-r0 \
         libc-dev=0.7.1-r0 \
         libevent=2.1.8-r6 \
