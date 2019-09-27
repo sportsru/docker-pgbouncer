@@ -43,6 +43,7 @@ FROM alpine:3.9
 RUN apk --update --no-cache add \
         libevent \
         libressl \
+        ca-certificates \
         c-ares
 
 WORKDIR /etc/pgbouncer
