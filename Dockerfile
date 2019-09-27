@@ -4,22 +4,23 @@ FROM alpine:3.9 AS build_stage
 
 LABEL maintainer "robert@aztek.io"
 
+# hadolint ignore=DL3018
 RUN apk --update --no-cache add \
-        autoconf=2.69-r2 \
-        autoconf-doc=2.69-r2 \
-        automake=1.16.1-r0 \
-        c-ares=1.15.0-r0 \
-        c-ares-dev=1.15.0-r0 \
-        curl=7.64.0-r2 \
-        gcc=8.3.0-r0 \
-        libc-dev=0.7.1-r0 \
-        libevent=2.1.8-r6 \
-        libevent-dev=2.1.8-r6 \
-        libtool=2.4.6-r5 \
-        make=4.2.1-r2 \
-        libressl-dev=2.7.5-r0 \
-        file=5.36-r0 \
-        pkgconf=1.6.0-r0
+        autoconf \
+        autoconf-doc \
+        automake \
+        c-ares \
+        c-ares-dev \
+        curl \
+        gcc \
+        libc-dev \
+        libevent \
+        libevent-dev \
+        libtool \
+        make \
+        libressl-dev \
+        file \
+        pkgconf
 
 ARG PGBOUNCER_VERSION
 
@@ -38,10 +39,11 @@ RUN ./configure --prefix=/usr && \
 
 FROM alpine:3.9
 
+# hadolint ignore=DL3018
 RUN apk --update --no-cache add \
-        libevent=2.1.8-r6 \
-        libressl=2.7.5-r0 \
-        c-ares=1.15.0-r0
+        libevent \
+        libressl \
+        c-ares
 
 WORKDIR /etc/pgbouncer
 WORKDIR /var/log/pgbouncer

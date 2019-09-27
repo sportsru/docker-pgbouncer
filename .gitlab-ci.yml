@@ -63,6 +63,8 @@ build_image:
 
             if ! docker pull "${ORG}/${REPO}:$VERSION"; then
                 push_image
+            elif test -z "$SCHEDULED"; then
+                push_image
             fi
         }
 
