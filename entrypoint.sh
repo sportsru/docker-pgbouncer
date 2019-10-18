@@ -6,13 +6,14 @@ PG_USER=postgres
 
 invoke_main(){
     check_variables
-    create_config
+    test -n "$DATABASES_RAW" && create_config_section_raw_databases || create_config_section_databases
+    create_config_section_pgbouncer
     start_app
 }
 
 check_variables(){
-    test -n "$DATABASES_HOST" ||
-        error "You have to set the DATABASES_HOST Environment variable at the very least"
+    test -n "$DATABASES_RAW" || test -n "$DATABASES_HOST" ||
+        error "You have to set the DATABASES_RAW or the DATABASES_HOST Environment variable at the very least"
 }
 
 error(){
@@ -23,8 +24,20 @@ error(){
     exit "$EXIT"
 }
 
-create_config(){
-    echo "Creating pgbouncer config in ${PG_CONFIG_DIR}"
+create_config_section_raw_databases(){
+    echo "Creating section databases of pgbouncer config in ${PG_CONFIG_DIR}"
+
+    cat > ${PG_CONFIG_DIR}/pgbouncer.ini << EOF
+#pgbouncer.ini
+
+[databases]
+$(echo "$DATABASES_RAW" | tr '|' '\n')
+
+EOF
+}
+
+create_config_section_databases(){
+    echo "Creating section databases of pgbouncer config in ${PG_CONFIG_DIR}"
 
     nl="$(printf '%b_' '\n')";
     nl="${nl%_}"
@@ -47,6 +60,16 @@ ${DATABASES_CLIENT_ENCODING:+" client_encoding=${DATABASES_CLIENT_ENCODING}"}\
 ${DATABASES_DATESTYLE:+" datestyle=${DATABASES_DATESTYLE}"}\
 ${DATABASES_TIMEZONE:+" timezone=${DATABASES_TIMEZONE}"}
 
+EOF
+}
+
+create_config_section_pgbouncer(){
+    echo "Creating section pgbouncer of pgbouncer config in ${PG_CONFIG_DIR}"
+
+    nl="$(printf '%b_' '\n')";
+    nl="${nl%_}"
+
+    cat >> ${PG_CONFIG_DIR}/pgbouncer.ini << EOF
 [pgbouncer]
 ${PGBOUNCER_LOGFILE:+logfile = ${PGBOUNCER_LOGFILE}${nl}}\
 ${PGBOUNCER_PIDFILE:+pidfile = ${PGBOUNCER_PIDFILE}${nl}}\

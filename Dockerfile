@@ -2,7 +2,7 @@ FROM alpine:3.9
 
 FROM alpine:3.9 AS build_stage
 
-LABEL maintainer "robert@aztek.io"
+LABEL maintainer "pilot@sports.ru"
 
 # hadolint ignore=DL3018
 RUN apk --update --no-cache add \
@@ -22,9 +22,7 @@ RUN apk --update --no-cache add \
         file \
         pkgconf
 
-ARG PGBOUNCER_VERSION
-
-RUN curl -Lso  "/tmp/pgbouncer.tar.gz" "https://pgbouncer.github.io/downloads/files/${PGBOUNCER_VERSION}/pgbouncer-${PGBOUNCER_VERSION}.tar.gz" && \
+RUN curl -Lso  "/tmp/pgbouncer.tar.gz" "https://pgbouncer.github.io/downloads/files/1.11.0/pgbouncer-1.11.0.tar.gz" && \
         file "/tmp/pgbouncer.tar.gz"
 
 WORKDIR /tmp
