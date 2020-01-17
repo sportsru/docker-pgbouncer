@@ -1,6 +1,6 @@
 # README
 
-## Fork of https://gitlab.com/aztek-io/pgbouncer-container
+## Fork of https://gitlab.com/aztek-io/oss/containers/pgbouncer-container
 
 ## GENERAL DOCUMENTATION
 
