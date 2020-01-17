@@ -46,7 +46,7 @@ create_config_section_databases(){
 #pgbouncer.ini
 
 [databases]
-* = host = ${DATABASES_HOST} \
+${DATABASES_CLIENT_SIDE_DBNAME:-*} = host = ${DATABASES_HOST} \
 port=${DATABASES_PORT:-5432} user=${DATABASES_USER:-postgres}\
 ${DATABASES_PASSWORD:+" password=${DATABASES_PASSWORD}"}\
 ${DATABASES_DBNAME:+" dbname=${DATABASES_DBNAME}"}\
