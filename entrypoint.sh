@@ -34,7 +34,8 @@ create_config(){
 
 [databases]
 ${DATABASES_CLIENT_SIDE_DBNAME:-*} = host = ${DATABASES_HOST} \
-port=${DATABASES_PORT:-5432} user=${DATABASES_USER:-postgres}\
+port=${DATABASES_PORT:-5432}\
+${DATABASES_USER:+" user=${DATABASES_USER}"}\
 ${DATABASES_PASSWORD:+" password=${DATABASES_PASSWORD}"}\
 ${DATABASES_DBNAME:+" dbname=${DATABASES_DBNAME}"}\
 ${DATABASES_AUTH_USER:+" auth_user=${DATABASES_AUTH_USER}"}\
