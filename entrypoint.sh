@@ -2,7 +2,6 @@
 set -e
 
 PG_CONFIG_DIR=/etc/pgbouncer
-PG_USER=postgres
 
 invoke_main(){
     check_variables
@@ -143,7 +142,7 @@ EOF
 
 start_app(){
     echo "Starting pgbouncer."
-    exec /opt/pgbouncer/pgbouncer ${QUIET:+-q} -u ${PG_USER} ${PG_CONFIG_DIR}/pgbouncer.ini
+    exec /opt/pgbouncer/pgbouncer ${QUIET:+-q} ${PGBOUNCER_USER:+-u ${PGBOUNCER_USER}} ${PG_CONFIG_DIR}/pgbouncer.ini
 }
 
 invoke_main
