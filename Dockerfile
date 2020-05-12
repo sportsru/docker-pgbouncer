@@ -22,7 +22,7 @@ RUN apk --update --no-cache add \
         file \
         pkgconf
 
-RUN curl -Lso  "/tmp/pgbouncer.tar.gz" "https://pgbouncer.github.io/downloads/files/1.12.0/pgbouncer-1.12.0.tar.gz" && \
+RUN curl -Lso  "/tmp/pgbouncer.tar.gz" "https://pgbouncer.github.io/downloads/files/1.13.0/pgbouncer-1.13.0.tar.gz" && \
         file "/tmp/pgbouncer.tar.gz"
 
 WORKDIR /tmp
