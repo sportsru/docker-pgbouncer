@@ -37,7 +37,7 @@ get_currentversion:
         apk add curl
         curl -sLI https://github.com/pgbouncer/pgbouncer/releases/latest | \
             awk -F '/' \
-                '/^Location/ {
+                '/^[Ll]ocation/ {
                     sub("\r$", "");
                     split($NF, v, "_");
                     print v[2] "."  v[3] "." v[4]}

@@ -2,7 +2,6 @@
 set -e
 
 PG_CONFIG_DIR=/etc/pgbouncer
-PG_USER=postgres
 
 invoke_main(){
     check_variables
@@ -47,7 +46,8 @@ create_config_section_databases(){
 
 [databases]
 ${DATABASES_CLIENT_SIDE_DBNAME:-*} = host = ${DATABASES_HOST} \
-port=${DATABASES_PORT:-5432} user=${DATABASES_USER:-postgres}\
+port=${DATABASES_PORT:-5432}\
+${DATABASES_USER:+" user=${DATABASES_USER}"}\
 ${DATABASES_PASSWORD:+" password=${DATABASES_PASSWORD}"}\
 ${DATABASES_DBNAME:+" dbname=${DATABASES_DBNAME}"}\
 ${DATABASES_AUTH_USER:+" auth_user=${DATABASES_AUTH_USER}"}\
@@ -165,7 +165,7 @@ EOF
 
 start_app(){
     echo "Starting pgbouncer."
-    exec /opt/pgbouncer/pgbouncer ${QUIET:+-q} -u ${PG_USER} ${PG_CONFIG_DIR}/pgbouncer.ini
+    exec /opt/pgbouncer/pgbouncer ${QUIET:+-q} ${PGBOUNCER_USER:+-u ${PGBOUNCER_USER}} ${PG_CONFIG_DIR}/pgbouncer.ini
 }
 
 invoke_main
