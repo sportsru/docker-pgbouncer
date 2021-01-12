@@ -1,6 +1,6 @@
-FROM alpine:3.9
+FROM alpine:3.12
 
-FROM alpine:3.9 AS build_stage
+FROM alpine:3.12 AS build_stage
 
 LABEL maintainer "pilot@sports.ru"
 
@@ -22,7 +22,7 @@ RUN apk --update --no-cache add \
         file \
         pkgconf
 
-RUN curl -Lso  "/tmp/pgbouncer.tar.gz" "https://pgbouncer.github.io/downloads/files/1.14.0/pgbouncer-1.14.0.tar.gz" && \
+RUN curl -Lso  "/tmp/pgbouncer.tar.gz" "https://pgbouncer.github.io/downloads/files/1.15.0/pgbouncer-1.15.0.tar.gz" && \
         file "/tmp/pgbouncer.tar.gz"
 
 WORKDIR /tmp
@@ -35,7 +35,7 @@ WORKDIR /tmp/pgbouncer
 RUN ./configure --prefix=/usr && \
         make
 
-FROM alpine:3.9
+FROM alpine:3.12
 
 # hadolint ignore=DL3018
 RUN apk --update --no-cache add \
@@ -47,7 +47,12 @@ RUN apk --update --no-cache add \
 WORKDIR /etc/pgbouncer
 WORKDIR /var/log/pgbouncer
 
-RUN chown -R postgres:root \
+RUN addgroup --system postgres && \
+        adduser --system --no-create-home \
+        --gecos '' --shell '/bin/sh' \
+        --disabled-password --ingroup postgres \
+        --home /var/lib/postgresql postgres && \
+        chown -R postgres:root \
         /etc/pgbouncer \
         /var/log/pgbouncer
 
